@@ -1,0 +1,11 @@
+# OS Cruft
+.DS_Store
+
+# Package Managers
+vendor
+node_modules
+composer.lock
+
+# Environment
+.env
+.tm_properties

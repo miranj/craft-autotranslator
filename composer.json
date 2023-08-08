@@ -1,0 +1,52 @@
+{
+    "name": "miranj/craft-auto-translator",
+    "description": "A Craft CMS plugin for auto-translating content from one language to another.",
+    "type": "craft-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Miranj",
+            "homepage": "https://miranj.in"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/miranj/craft-auto-translator/issues?state=open",
+        "source": "https://github.com/miranj/craft-auto-translator",
+        "docs": "https://github.com/miranj/craft-auto-translator",
+        "rss": "https://github.com/miranj/craft-auto-translator/releases.atom"
+    },
+    "require": {
+        "php": ">=8.0.2",
+        "craftcms/cms": "^4.4.0"
+    },
+    "require-dev": {
+        "craftcms/ecs": "dev-main",
+        "craftcms/phpstan": "dev-main"
+    },
+    "autoload": {
+        "psr-4": {
+            "miranj\\autotranslator\\": "src/"
+        }
+    },
+    "extra": {
+        "handle": "auto-translator",
+        "name": "Auto Translator",
+        "developer": "Miranj Design LLP",
+        "documentationUrl": "https://github.com/miranj/craft-auto-translator"
+    },
+    "scripts": {
+        "check-cs": "ecs check --ansi",
+        "fix-cs": "ecs check --ansi --fix",
+        "phpstan": "phpstan --memory-limit=1G"
+    },
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "8.0.2"
+        },
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true,
+            "craftcms/plugin-installer": true
+        }
+    }
+}
