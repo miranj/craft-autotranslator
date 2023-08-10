@@ -10,10 +10,10 @@
   })
 %}
 
-{% macro configWarning(setting) -%}
-    {{ "This is being overridden by the `{setting}` config setting in your `{file}` config file."|t('auto-translator', {
+{% macro configWarning(setting, plugin) -%}
+    {{ "This is being overridden by the `{setting}` config setting in your `{file}` config file."|t(plugin.handle, {
         setting: setting,
-        file: 'auto-translator.php'
+        file: plugin.handle|lower ~ '.php',
     })|raw }}
 {%- endmacro %}
 
@@ -27,7 +27,7 @@
   }),
   value: settings.sourceSiteHandle,
   disabled: 'sourceSiteHandle' in overrides,
-  warning: 'sourceSiteHandle' in overrides ? _self.configWarning('sourceSiteHandle'),
+  warning: 'sourceSiteHandle' in overrides ? _self.configWarning('sourceSiteHandle', plugin),
   errors: settings.getErrors('sourceSiteHandle'),
 }) }}
 
@@ -38,6 +38,6 @@
     disabled: 'targetSiteHandles' in overrides,
   })),
   values: settings.targetSiteHandles,
-  warning: 'targetSiteHandles' in overrides ? _self.configWarning('targetSiteHandles'),
+  warning: 'targetSiteHandles' in overrides ? _self.configWarning('targetSiteHandles', plugin),
   errors: settings.getErrors('targetSiteHandles'),
 }) }}
