@@ -51,6 +51,7 @@ class Plugin extends BasePlugin
         return Craft::$app->view->renderTemplate('auto-translator/_settings.twig', [
             'plugin' => $this,
             'settings' => $this->getSettings(),
+            'overrides' => array_keys(Craft::$app->getConfig()->getConfigFromFile(strtolower($this->handle)))
         ]);
     }
 

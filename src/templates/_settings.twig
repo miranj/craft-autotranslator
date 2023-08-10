@@ -3,4 +3,41 @@
 
 {% import '_includes/forms.twig' as forms %}
 
-{# ... #}
+{% set allSites = craft.app.sites.getAllSites()
+  |map(site => {
+    label: [site.name, site.group]|filter|join(' - '),
+    value: site.handle,
+  })
+%}
+
+{% macro configWarning(setting) -%}
+    {{ "This is being overridden by the `{setting}` config setting in your `{file}` config file."|t('auto-translator', {
+        setting: setting,
+        file: 'auto-translator.php'
+    })|raw }}
+{%- endmacro %}
+
+{{ forms.selectizeField({
+  first: true,
+  label: 'Source Site',
+  name: 'sourceSiteHandle',
+  options: allSites|unshift({
+    value: '',
+    label: ' ',
+  }),
+  value: settings.sourceSiteHandle,
+  disabled: 'sourceSiteHandle' in overrides,
+  warning: 'sourceSiteHandle' in overrides ? _self.configWarning('sourceSiteHandle'),
+  errors: settings.getErrors('sourceSiteHandle'),
+}) }}
+
+{{ forms.checkboxGroupField({
+  label: 'Target Sites',
+  name: 'targetSiteHandles',
+  options: allSites|map(o => o|merge({
+    disabled: 'targetSiteHandles' in overrides,
+  })),
+  values: settings.targetSiteHandles,
+  warning: 'targetSiteHandles' in overrides ? _self.configWarning('targetSiteHandles'),
+  errors: settings.getErrors('targetSiteHandles'),
+}) }}
