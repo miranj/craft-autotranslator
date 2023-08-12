@@ -2,7 +2,6 @@
 
 namespace miranj\autotranslator\models;
 
-use Craft;
 use craft\base\Model;
 
 /**
@@ -19,7 +18,7 @@ class Settings extends Model
         return array_merge(parent::defineRules(), [
             ['sourceSiteHandle', 'string'],
             ['targetSiteHandles', 'each', 'rule' => ['string']],
-            ['targetSiteHandles', 'required', 'when' => function ($model) {
+            ['targetSiteHandles', 'required', 'when' => function($model) {
                 return !!trim($model->sourceSiteHandle);
             }],
         ]);

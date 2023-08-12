@@ -7,9 +7,9 @@ use craft\base\Model;
 use craft\base\Plugin as BasePlugin;
 use miranj\autotranslator\models\Settings;
 use miranj\autotranslator\services\Translator;
-use miranj\autotranslator\translators\TranslatorInterface;
 use miranj\autotranslator\translators\DeepLTranslator;
 use miranj\autotranslator\translators\GoogleTranslator;
+use miranj\autotranslator\translators\TranslatorInterface;
 
 /**
  * Auto Translator plugin
@@ -26,7 +26,7 @@ class Plugin extends BasePlugin
     public string $schemaVersion = '1.0.0';
     public bool $hasCpSettings = true;
     
-    const DEFAULT_TRANSLATORS = [
+    public const DEFAULT_TRANSLATORS = [
         DeepLTranslator::class,
         GoogleTranslator::class,
     ];

@@ -3,15 +3,14 @@
 namespace miranj\autotranslator\translators;
 
 use Craft;
-use miranj\autotranslator\exceptions\AutoTranslatorException;
-use Google\Cloud\Translate\TranslateClient;
 use Google\Cloud\Core\Exception\ServiceException;
-
+use Google\Cloud\Translate\TranslateClient;
+use miranj\autotranslator\exceptions\AutoTranslatorException;
 
 /**
 * Google Cloud Translations
 * v2 (Basic)
-* 
+*
 * https://cloud.google.com/translate/docs/basic/translating-text
 * https://cloud.google.com/php/docs/reference/cloud-translate/latest
 */

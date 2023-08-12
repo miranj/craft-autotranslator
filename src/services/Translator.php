@@ -3,8 +3,8 @@
 namespace miranj\autotranslator\services;
 
 use Craft;
-use miranj\autotranslator\Plugin;
 use miranj\autotranslator\exceptions\AutoTranslatorException;
+use miranj\autotranslator\Plugin;
 use miranj\autotranslator\translators\TranslatorInterface;
 use yii\base\Component;
 

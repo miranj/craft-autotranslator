@@ -7,7 +7,7 @@ use DeepL\Translator as Translator;
 
 /**
 * DeepL
-* 
+*
 * https://www.deepl.com/docs-api/translate-text
 * https://github.com/DeepLcom/deepl-php
 */
