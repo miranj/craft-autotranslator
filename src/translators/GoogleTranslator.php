@@ -4,7 +4,7 @@ namespace miranj\autotranslator\translators;
 
 use Craft;
 use Google\Cloud\Core\Exception\ServiceException;
-use Google\Cloud\Translate\TranslateClient;
+use Google\Cloud\Translate\V2\TranslateClient;
 use miranj\autotranslator\exceptions\AutoTranslatorException;
 
 /**

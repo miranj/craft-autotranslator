@@ -19,7 +19,7 @@ class Translator extends Component
     public function getTranslator()
     {
         if (!$this->_translator) {
-            $translatorClass = Plugin::getInstance()->settings->translatorClass;
+            $translatorClass = Plugin::getInstance()->getSettings()->translatorClass;
             $translatorIsCompatible = in_array(
                 TranslatorInterface::class,
                 class_implements($translatorClass),
