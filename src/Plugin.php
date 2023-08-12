@@ -6,6 +6,7 @@ use Craft;
 use craft\base\Model;
 use craft\base\Plugin as BasePlugin;
 use miranj\autotranslator\models\Settings;
+use miranj\autotranslator\translators\TranslatorInterface;
 
 /**
  * Auto Translator plugin
@@ -20,6 +21,9 @@ class Plugin extends BasePlugin
 {
     public string $schemaVersion = '1.0.0';
     public bool $hasCpSettings = true;
+    
+    const DEFAULT_TRANSLATORS = [
+    ];
 
     public static function config(): array
     {
@@ -48,10 +52,23 @@ class Plugin extends BasePlugin
 
     protected function settingsHtml(): ?string
     {
+        // only allow classes that implement TranslatorInterface
+        $translatorOptions = array_filter(
+            self::DEFAULT_TRANSLATORS,
+            fn($item) => in_array(TranslatorInterface::class, class_implements($item))
+        );
+        $translatorOptions = array_map(fn($item) => [
+            'value' => $item,
+            'label' => $item::displayName(),
+        ], $translatorOptions);
+        
+        $configOverrides = Craft::$app->getConfig()->getConfigFromFile(strtolower($this->handle));
+        
         return Craft::$app->view->renderTemplate('auto-translator/_settings.twig', [
             'plugin' => $this,
             'settings' => $this->getSettings(),
-            'overrides' => array_keys(Craft::$app->getConfig()->getConfigFromFile(strtolower($this->handle)))
+            'overrides' => array_keys($configOverrides),
+            'translatorOptions' => $translatorOptions,
         ]);
     }
 

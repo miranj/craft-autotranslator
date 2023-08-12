@@ -41,3 +41,13 @@
   warning: 'targetSiteHandles' in overrides ? _self.configWarning('targetSiteHandles', plugin),
   errors: settings.getErrors('targetSiteHandles'),
 }) }}
+
+{{ forms.radioGroupField({
+  label: 'Translations Provider',
+  name: 'translatorClass',
+  options: translatorOptions,
+  value: settings.translatorClass,
+  disabled: 'translatorClass' in overrides,
+  warning: 'translatorClass' in overrides ? _self.configWarning('translatorClass', plugin),
+  errors: settings.getErrors('translatorClass'),
+}) }}

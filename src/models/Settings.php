@@ -12,6 +12,7 @@ class Settings extends Model
 {
     public string $sourceSiteHandle = '';
     public array $targetSiteHandles = [];
+    public $translatorClass = null;
     
     protected function defineRules(): array
     {
