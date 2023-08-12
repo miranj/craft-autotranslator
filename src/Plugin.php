@@ -8,6 +8,7 @@ use craft\base\Plugin as BasePlugin;
 use miranj\autotranslator\models\Settings;
 use miranj\autotranslator\services\Translator;
 use miranj\autotranslator\translators\TranslatorInterface;
+use miranj\autotranslator\translators\GoogleTranslator;
 
 /**
  * Auto Translator plugin
@@ -25,6 +26,7 @@ class Plugin extends BasePlugin
     public bool $hasCpSettings = true;
     
     const DEFAULT_TRANSLATORS = [
+        GoogleTranslator::class,
     ];
 
     public static function config(): array
