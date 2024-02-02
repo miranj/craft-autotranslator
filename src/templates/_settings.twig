@@ -64,3 +64,13 @@
   warning: 'translatorAuthKey' in overrides ? _self.configWarning('translatorAuthKey', plugin),
   errors: settings.getErrors('translatorAuthKey'),
 }) }}
+
+{{ forms.lightswitchField({
+  label: "Cache Translations"|t(plugin.handle),
+  name: 'cacheEnabled',
+  id: 'cacheEnabled',
+  on: settings.cacheEnabled,
+  disabled: 'cacheEnabled' in overrides,
+  warning: 'cacheEnabled' in overrides ? _self.configWarning('cacheEnabled', plugin),
+  errors: settings.getErrors('cacheEnabled'),
+}) }}

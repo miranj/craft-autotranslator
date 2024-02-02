@@ -34,26 +34,31 @@ class Translator extends Component
             return $input;
         }
         
+        // sanity check
         if (!trim($input)) {
             Craft::debug("Ignore empty string:$input", __METHOD__);
             return $input;
         }
         
+        // log
         if ($sourceLanguage) {
             Craft::debug("Translate from $sourceLanguage to $targetLanguage: $input", __METHOD__);
         } else {
             Craft::debug("Translate to $targetLanguage: $input", __METHOD__);
         }
 
-        $cacheKey = [$translator::class, $input, $targetLanguage, $sourceLanguage];
+        // attempt translation
         $result = null;
-
-        // translation service if cache miss
         try {
-            $result = Craft::$app->cache->getOrSet(
-                $cacheKey,
-                fn() => $translator->translate($input, $targetLanguage, $sourceLanguage),
-            );
+            if (Plugin::getInstance()->settings->cacheEnabled) {
+                $cacheKey = [$translator::class, $input, $targetLanguage, $sourceLanguage];
+                $result = Craft::$app->cache->getOrSet(
+                    $cacheKey,
+                    fn() => $translator->translate($input, $targetLanguage, $sourceLanguage),
+                );
+            } else {
+                $result = $translator->translate($input, $targetLanguage, $sourceLanguage);
+            }
         } catch (AutoTranslatorException $e) {
             Craft::error("Translation service error: $e", __METHOD__);
         }

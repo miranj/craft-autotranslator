@@ -14,10 +14,13 @@ class Settings extends Model
     public array $targetSiteHandles = [];
     public $translatorClass = null;
     public $translatorAuthKey = '';
+    public $cacheEnabled = true;
     
     protected function defineRules(): array
     {
         return array_merge(parent::defineRules(), [
+            ['cacheEnabled', 'boolean'],
+            ['cacheEnabled', 'required'],
             ['sourceSiteHandle', 'string'],
             ['targetSiteHandles', 'each', 'rule' => ['string']],
             ['targetSiteHandles', 'required', 'when' => function($model) {
