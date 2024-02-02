@@ -19,7 +19,7 @@
 
 {{ forms.selectizeField({
   first: true,
-  label: 'Source Site',
+  label: 'Source Site'|t(plugin.handle),
   name: 'sourceSiteHandle',
   options: allSites|unshift({
     value: '',
@@ -32,7 +32,7 @@
 }) }}
 
 {{ forms.checkboxGroupField({
-  label: 'Target Sites',
+  label: 'Target Sites'|t(plugin.handle),
   name: 'targetSiteHandles',
   options: allSites|map(o => o|merge({
     disabled: 'targetSiteHandles' in overrides,
@@ -42,8 +42,10 @@
   errors: settings.getErrors('targetSiteHandles'),
 }) }}
 
+<hr>
+
 {{ forms.radioGroupField({
-  label: 'Translations Service',
+  label: 'Translations Service'|t(plugin.handle),
   name: 'translatorClass',
   options: translatorOptions,
   value: settings.translatorClass,
@@ -53,7 +55,7 @@
 }) }}
 
 {{ forms.autosuggestField({
-  label: 'Translations Service Auth Key',
+  label: 'Translations Service Auth Key'|t(plugin.handle),
   name: 'translatorAuthKey',
   id: 'translatorAuthKey',
   suggestEnvVars: true,
