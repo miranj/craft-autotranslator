@@ -5,7 +5,6 @@ namespace miranj\autotranslator\services;
 use Craft;
 use miranj\autotranslator\exceptions\AutoTranslatorException;
 use miranj\autotranslator\Plugin;
-use miranj\autotranslator\translators\TranslatorInterface;
 use yii\base\Component;
 
 /**
@@ -19,13 +18,9 @@ class Translator extends Component
     public function getTranslator()
     {
         if (!$this->_translator) {
-            $translatorClass = Plugin::getInstance()->getSettings()->translatorClass;
-            $translatorIsCompatible = in_array(
-                TranslatorInterface::class,
-                class_implements($translatorClass),
-            );
-            if ($translatorClass && $translatorIsCompatible) {
-                $this->_translator = new $translatorClass();
+            $settings = Plugin::getInstance()->getSettings();
+            if ($settings->isTranslatorCompatible()) {
+                $this->_translator = new $settings->translatorClass();
             }
         }
         return $this->_translator;

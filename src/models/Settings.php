@@ -3,6 +3,7 @@
 namespace miranj\autotranslator\models;
 
 use craft\base\Model;
+use miranj\autotranslator\translators\TranslatorInterface;
 
 /**
  * Auto Translator settings
@@ -22,5 +23,13 @@ class Settings extends Model
                 return !!trim($model->sourceSiteHandle);
             }],
         ]);
+    }
+    
+    public function isTranslatorCompatible()
+    {
+        return $this->translatorClass !== null && in_array(
+            TranslatorInterface::class,
+            class_implements($this->translatorClass),
+        );
     }
 }
