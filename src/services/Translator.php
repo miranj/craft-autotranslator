@@ -13,7 +13,6 @@ use yii\base\Component;
 class Translator extends Component
 {
     protected $_translator = null;
-    protected $_translatorOffline = false;
     
     public function getTranslator()
     {
@@ -49,21 +48,14 @@ class Translator extends Component
         $cacheKey = [$translator::class, $input, $targetLanguage, $sourceLanguage];
         $result = null;
 
-        // if the service is offline, query data cache only
-        if ($this->_translatorOffline) {
-            $result = Craft::$app->cache->get($cacheKey);
-        } else {
-            // otherwise, attempt both: data cache &
-            // translation service if cache miss
-            try {
-                $result = Craft::$app->cache->getOrSet(
-                    $cacheKey,
-                    fn() => $translator->translate($input, $targetLanguage, $sourceLanguage),
-                );
-            } catch (AutoTranslatorException $e) {
-                Craft::error("Translation service offline: $e", __METHOD__);
-                $this->_translatorOffline = true;
-            }
+        // translation service if cache miss
+        try {
+            $result = Craft::$app->cache->getOrSet(
+                $cacheKey,
+                fn() => $translator->translate($input, $targetLanguage, $sourceLanguage),
+            );
+        } catch (AutoTranslatorException $e) {
+            Craft::error("Translation service error: $e", __METHOD__);
         }
         
         return $result ?: $input;
