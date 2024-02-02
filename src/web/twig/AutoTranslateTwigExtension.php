@@ -26,9 +26,9 @@ class AutoTranslateTwigExtension extends AbstractExtension
         ];
     }
 
-    public function autotranslate($string, $language = null, $from = null)
+    public function autotranslate($string, $language = '', $from = '')
     {
-        if ($language == null) {
+        if ($language === '') {
             $language = Craft::$app->language;
         }
         $result = Plugin::getInstance()->translator->translate($string, $language, $from);

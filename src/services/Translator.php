@@ -25,26 +25,42 @@ class Translator extends Component
         return $this->_translator;
     }
     
-    public function translate($input, $targetLanguage, $sourceLanguage = '')
+    protected function sanityCheck(mixed $input, string $targetLanguage, string $sourceLanguage = '')
     {
+        // blank input
+        if (!trim($input)) {
+            Craft::debug("Ignore empty string:$input", __METHOD__);
+            return false;
+        }
+        
+        // no target language
+        if (!trim($targetLanguage)) {
+            Craft::debug("Target translation language not specified: $input", __METHOD__);
+            return false;
+        }
+        
+        // same source and target
+        if (trim($targetLanguage) == trim($sourceLanguage)) {
+            Craft::debug("Same source & target language, skipping translation: $input", __METHOD__);
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public function translate(mixed $input, string $targetLanguage, string $sourceLanguage = '')
+    {
+        $result = null;
+        
+        // sanity check
+        if (!$this->sanityCheck($input, $targetLanguage, $sourceLanguage)) {
+            return $input;
+        }
+        
         // fetch active translator
         $translator = $this->getTranslator();
         if (!$translator) {
             Craft::debug("No translator found", __METHOD__);
-            return $input;
-        }
-        
-        // sanity check
-        if (!trim($input)) {
-            Craft::debug("Ignore empty string:$input", __METHOD__);
-            return $input;
-        }
-        if (!trim($targetLanguage)) {
-            Craft::debug("Target translation language not specified: $input", __METHOD__);
-            return $input;
-        }
-        if (trim($targetLanguage) == trim($sourceLanguage)) {
-            Craft::debug("Same source & target language, skipping translation: $input", __METHOD__);
             return $input;
         }
         
@@ -55,11 +71,10 @@ class Translator extends Component
             Craft::debug("Translate to $targetLanguage: $input", __METHOD__);
         }
 
-        // attempt translation
-        $result = null;
+        // attempt automatic translation
         try {
             $getTranslation = fn() => $translator->translate(
-                $input,
+                (string)$input,
                 $targetLanguage,
                 $sourceLanguage,
             );
