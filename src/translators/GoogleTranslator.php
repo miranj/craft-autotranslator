@@ -7,6 +7,8 @@ use craft\helpers\App;
 use Google\Cloud\Core\Exception\ServiceException;
 use Google\Cloud\Translate\V2\TranslateClient;
 use miranj\autotranslator\exceptions\AutoTranslatorException;
+use miranj\autotranslator\helpers\LanguageHelper;
+use miranj\autotranslator\Plugin;
 
 /**
 * Google Cloud Translations
@@ -23,6 +25,8 @@ class GoogleTranslator implements TranslatorInterface
     
     protected $_apiClient = null;
     protected $_apiKey = '';
+    protected $_sourceLanguages = [];
+    protected $_targetLanguages = [];
     
     function __construct(array $config = []) {
         $config = array_merge(self::$defaultConfig, $config);
@@ -42,13 +46,46 @@ class GoogleTranslator implements TranslatorInterface
         return $this->_apiClient;
     }
     
+    protected function setSourceAndTargetLanguages()
+    {
+        $apiCall = fn() => LanguageHelper::prepLanguageList(
+            $this->getApiClient()->languages()
+        );
+        $cacheKey = [self::class, __METHOD__];
+        $this->_sourceLanguages = Plugin::getInstance()->settings->cacheEnabled
+            ? Craft::$app->cache->getOrSet($cacheKey, $apiCall)
+            : $apiCall();
+        $this->_targetLanguages = $this->_sourceLanguages;
+    }
+    
+    public function getSourceLanguages()
+    {
+        if (!$this->_sourceLanguages) {
+            $this->setSourceAndTargetLanguages();
+        }
+        return $this->_sourceLanguages;
+    }
+    
+    public function getTargetLanguages()
+    {
+        if (!$this->_targetLanguages) {
+            $this->setSourceAndTargetLanguages();
+        }
+        return $this->_targetLanguages;
+    }
+    
+    public function findMatchingSourceLanguage(string $sourceLanguage)
+    {
+        return LanguageHelper::getBestMatchingLanguge($this->getSourceLanguages(), $sourceLanguage);
+    }
+    
+    public function findMatchingTargetLanguage(string $targetLanguage)
+    {
+        return LanguageHelper::getBestMatchingLanguge($this->getTargetLanguages(), $targetLanguage);
+    }
+    
     public function translate(string $input, string $targetLanguage, string $sourceLanguage = ''): ?string
     {
-        // convert into ISO-639 language codes
-        // https://wikipedia.org/wiki/ISO_639
-        $targetLanguage = explode('-', $targetLanguage, 2)[0];
-        $sourceLanguage = explode('-', $sourceLanguage, 2)[0];
-        
         // query the Google API
         try {
             Craft::info(
@@ -57,6 +94,10 @@ class GoogleTranslator implements TranslatorInterface
                     ") {$input}",
                 __METHOD__,
             );
+            
+            $targetLanguage = $this->findMatchingTargetLanguage($targetLanguage);
+            $sourceLanguage = $this->findMatchingSourceLanguage($sourceLanguage);
+            
             $result = $this->getApiClient()->translate($input, [
                 'target' => $targetLanguage,
                 'source' => $sourceLanguage ?: null,
