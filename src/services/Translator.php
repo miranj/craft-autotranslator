@@ -57,6 +57,15 @@ class Translator extends Component
             return $input;
         }
         
+        // check for static translations
+        if (Plugin::getInstance()->settings->preferStaticTranslations) {
+            $result = $this->getStaticTranslation($input, $targetLanguage);
+            if ($result !== null) {
+                Craft::debug("Static translation found $input: $result", __METHOD__);
+                return $result;
+            }
+        }
+        
         // fetch active translator
         $translator = $this->getTranslator();
         if (!$translator) {
@@ -89,5 +98,20 @@ class Translator extends Component
         }
         
         return $result ?: $input;
+    }
+    
+    public function getStaticTranslation(mixed $message, string $language, string $category = '')
+    {
+        if ($category === '') {
+            $category = Craft::$app->getRequest()->getIsSiteRequest() ? 'site' : 'app';
+        }
+        
+        $messageSource = Craft::$app->i18n->getMessageSource($category);
+        $translation = $messageSource->translate($category, (string)$message, $language);
+        if ($translation === false) {
+            return null;
+        }
+        
+        return Craft::t($category, (string)$message, [], $language);
     }
 }

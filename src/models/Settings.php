@@ -15,6 +15,7 @@ class Settings extends Model
     public $translatorClass = null;
     public $translatorAuthKey = '';
     public $cacheEnabled = true;
+    public $preferStaticTranslations = true;
     
     protected function defineRules(): array
     {
