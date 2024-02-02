@@ -40,10 +40,7 @@ class Translator extends Component
             return $input;
         }
         
-        // remove region codes from Craft language locales
-        $targetLanguage = explode('-', $targetLanguage, 2)[0];
         if ($sourceLanguage) {
-            $sourceLanguage = explode('-', $sourceLanguage, 2)[0];
             Craft::debug("Translate from $sourceLanguage to $targetLanguage: $input", __METHOD__);
         } else {
             Craft::debug("Translate to $targetLanguage: $input", __METHOD__);

@@ -44,6 +44,11 @@ class GoogleTranslator implements TranslatorInterface
     
     public function translate(string $input, string $targetLanguage, string $sourceLanguage = ''): ?string
     {
+        // convert into ISO-639 language codes
+        // https://wikipedia.org/wiki/ISO_639
+        $targetLanguage = explode('-', $targetLanguage, 2)[0];
+        $sourceLanguage = explode('-', $sourceLanguage, 2)[0];
+        
         // query the Google API
         try {
             Craft::info(
