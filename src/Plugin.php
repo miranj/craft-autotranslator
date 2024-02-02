@@ -10,6 +10,7 @@ use miranj\autotranslator\services\Translator;
 use miranj\autotranslator\translators\DeepLTranslator;
 use miranj\autotranslator\translators\GoogleTranslator;
 use miranj\autotranslator\translators\TranslatorInterface;
+use miranj\autotranslator\web\twig\AutoTranslateTwigExtension;
 
 /**
  * Auto Translator plugin
@@ -47,6 +48,7 @@ class Plugin extends BasePlugin
             $this->attachEventHandlers();
             // ...
         });
+        Craft::$app->view->registerTwigExtension(new AutoTranslateTwigExtension());
     }
 
     protected function createSettingsModel(): ?Model
