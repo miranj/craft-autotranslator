@@ -3,6 +3,7 @@
 namespace miranj\autotranslator\translators;
 
 use Craft;
+use craft\helpers\App;
 use DeepL\Translator as Translator;
 
 /**
@@ -13,7 +14,17 @@ use DeepL\Translator as Translator;
 */
 class DeepLTranslator implements TranslatorInterface
 {
+    public static array $defaultConfig = [
+        'translatorAuthKey' => '',
+    ];
+    
     protected $_apiClient = null;
+    protected $_apiKey = '';
+    
+    function __construct(array $config = []) {
+        $config = array_merge(self::$defaultConfig, $config);
+        $this->_apiKey = App::parseEnv($config['translatorAuthKey']);
+    }
     
     public static function displayName(): string
     {
@@ -23,8 +34,7 @@ class DeepLTranslator implements TranslatorInterface
     public function getApiClient()
     {
         if (!$this->_apiClient) {
-            $authKey = '';
-            $this->_apiClient = new Translator($authKey);
+            $this->_apiClient = new Translator($this->_apiKey);
         }
         return $this->_apiClient;
     }

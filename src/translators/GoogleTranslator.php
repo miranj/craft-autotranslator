@@ -3,6 +3,7 @@
 namespace miranj\autotranslator\translators;
 
 use Craft;
+use craft\helpers\App;
 use Google\Cloud\Core\Exception\ServiceException;
 use Google\Cloud\Translate\V2\TranslateClient;
 use miranj\autotranslator\exceptions\AutoTranslatorException;
@@ -16,7 +17,17 @@ use miranj\autotranslator\exceptions\AutoTranslatorException;
 */
 class GoogleTranslator implements TranslatorInterface
 {
+    public static array $defaultConfig = [
+        'translatorAuthKey' => '',
+    ];
+    
     protected $_apiClient = null;
+    protected $_apiKey = '';
+    
+    function __construct(array $config = []) {
+        $config = array_merge(self::$defaultConfig, $config);
+        $this->_apiKey = App::parseEnv($config['translatorAuthKey']);
+    }
     
     public static function displayName(): string
     {
@@ -26,8 +37,7 @@ class GoogleTranslator implements TranslatorInterface
     public function getApiClient()
     {
         if (!$this->_apiClient) {
-            $authKey = '';
-            $this->_apiClient = new TranslateClient(['key' => $authKey]);
+            $this->_apiClient = new TranslateClient(['key' => $this->_apiKey]);
         }
         return $this->_apiClient;
     }

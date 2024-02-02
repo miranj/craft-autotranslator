@@ -43,11 +43,22 @@
 }) }}
 
 {{ forms.radioGroupField({
-  label: 'Translations Provider',
+  label: 'Translations Service',
   name: 'translatorClass',
   options: translatorOptions,
   value: settings.translatorClass,
   disabled: 'translatorClass' in overrides,
   warning: 'translatorClass' in overrides ? _self.configWarning('translatorClass', plugin),
   errors: settings.getErrors('translatorClass'),
+}) }}
+
+{{ forms.autosuggestField({
+  label: 'Translations Service Auth Key',
+  name: 'translatorAuthKey',
+  id: 'translatorAuthKey',
+  suggestEnvVars: true,
+  value: settings.translatorAuthKey,
+  disabled: 'translatorAuthKey' in overrides,
+  warning: 'translatorAuthKey' in overrides ? _self.configWarning('translatorAuthKey', plugin),
+  errors: settings.getErrors('translatorAuthKey'),
 }) }}

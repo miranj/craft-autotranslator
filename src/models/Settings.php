@@ -13,6 +13,7 @@ class Settings extends Model
     public string $sourceSiteHandle = '';
     public array $targetSiteHandles = [];
     public $translatorClass = null;
+    public $translatorAuthKey = '';
     
     protected function defineRules(): array
     {
@@ -21,6 +22,10 @@ class Settings extends Model
             ['targetSiteHandles', 'each', 'rule' => ['string']],
             ['targetSiteHandles', 'required', 'when' => function($model) {
                 return !!trim($model->sourceSiteHandle);
+            }],
+            ['translatorAuthKey', 'string'],
+            ['translatorAuthKey', 'required', 'when' => function($model) {
+                return $model->isTranslatorCompatible();
             }],
         ]);
     }

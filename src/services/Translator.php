@@ -20,7 +20,7 @@ class Translator extends Component
         if (!$this->_translator) {
             $settings = Plugin::getInstance()->getSettings();
             if ($settings->isTranslatorCompatible()) {
-                $this->_translator = new $settings->translatorClass();
+                $this->_translator = new $settings->translatorClass($settings->toArray());
             }
         }
         return $this->_translator;
