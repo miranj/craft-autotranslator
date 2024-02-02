@@ -39,6 +39,14 @@ class Translator extends Component
             Craft::debug("Ignore empty string:$input", __METHOD__);
             return $input;
         }
+        if (!trim($targetLanguage)) {
+            Craft::debug("Target translation language not specified: $input", __METHOD__);
+            return $input;
+        }
+        if (trim($targetLanguage) == trim($sourceLanguage)) {
+            Craft::debug("Same source & target language, skipping translation: $input", __METHOD__);
+            return $input;
+        }
         
         // log
         if ($sourceLanguage) {
@@ -50,14 +58,16 @@ class Translator extends Component
         // attempt translation
         $result = null;
         try {
+            $getTranslation = fn() => $translator->translate(
+                $input,
+                $targetLanguage,
+                $sourceLanguage,
+            );
             if (Plugin::getInstance()->settings->cacheEnabled) {
                 $cacheKey = [$translator::class, $input, $targetLanguage, $sourceLanguage];
-                $result = Craft::$app->cache->getOrSet(
-                    $cacheKey,
-                    fn() => $translator->translate($input, $targetLanguage, $sourceLanguage),
-                );
+                $result = Craft::$app->cache->getOrSet($cacheKey, $getTranslation);
             } else {
-                $result = $translator->translate($input, $targetLanguage, $sourceLanguage);
+                $result = $getTranslation();
             }
         } catch (AutoTranslatorException $e) {
             Craft::error("Translation service error: $e", __METHOD__);
