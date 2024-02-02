@@ -5,6 +5,8 @@ namespace miranj\autotranslator\translators;
 use Craft;
 use craft\helpers\App;
 use DeepL\Translator as Translator;
+use DeepL\DeepLException;
+use miranj\autotranslator\exceptions\AutoTranslatorException;
 
 /**
 * DeepL
@@ -42,21 +44,27 @@ class DeepLTranslator implements TranslatorInterface
     public function translate(string $input, string $targetLanguage, string $sourceLanguage = ''): ?string
     {
         // query the DeepL API
-        Craft::info(
-            "API request: translate from {$sourceLanguage} to {$targetLanguage} (" .
-                strlen($input) .
-                ") {$input}",
-            __METHOD__,
-        );
-        $result = $this->getApiClient()->translateText(
-            $input,
-            $sourceLanguage ?: null,
-            $targetLanguage,
-        );
+        try {
+            Craft::info(
+                "API request: translate from {$sourceLanguage} to {$targetLanguage} (" .
+                    strlen($input) .
+                    ") {$input}",
+                __METHOD__,
+            );
+            $result = $this->getApiClient()->translateText(
+                $input,
+                $sourceLanguage ?: null,
+                $targetLanguage,
+            );
+        } catch (DeepLException $e) {
+            throw new AutoTranslatorException(previous: $e);
+        }
         
         // fallback to returning the input as-is
         if (!$result) {
             $result = ['text' => $input];
+        } else {
+            $result = ['text' => $result->text];
         }
 
         return html_entity_decode($result['text'], ENT_QUOTES);
