@@ -89,7 +89,7 @@ class GoogleTranslator implements TranslatorInterface
         // query the Google API
         try {
             Craft::info(
-                "API request: translate from {$sourceLanguage} to {$targetLanguage} (" .
+                "Google API request: translate from {$sourceLanguage} to {$targetLanguage} (" .
                     strlen($input) .
                     ") {$input}",
                 __METHOD__,

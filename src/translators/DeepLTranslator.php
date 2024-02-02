@@ -88,7 +88,7 @@ class DeepLTranslator implements TranslatorInterface
         // query the DeepL API
         try {
             Craft::info(
-                "API request: translate from {$sourceLanguage} to {$targetLanguage} (" .
+                "DeepL API request: translate from {$sourceLanguage} to {$targetLanguage} (" .
                     strlen($input) .
                     ") {$input}",
                 __METHOD__,
