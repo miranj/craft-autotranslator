@@ -13,9 +13,9 @@ class Settings extends Model
     public string $sourceSiteHandle = '';
     public array $targetSiteHandles = [];
     public $translatorClass = null;
-    public $translatorAuthKey = '';
-    public $cacheEnabled = true;
-    public $preferStaticTranslations = true;
+    public string $translatorAuthKey = '';
+    public bool $cacheEnabled = true;
+    public bool $preferStaticTranslations = true;
     
     protected function defineRules(): array
     {
