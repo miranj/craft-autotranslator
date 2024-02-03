@@ -5,8 +5,13 @@
 
 {% set allSites = craft.app.sites.getAllSites()
   |map(site => {
-    label: [site.name, site.group]|filter|join(' - '),
+    label: site.name,
     value: site.handle,
+    data: {
+      data: {
+        hint: site.group,
+      },
+    },
   })
 %}
 
@@ -21,6 +26,7 @@
   first: true,
   label: 'Source Site'|t(plugin.handle),
   name: 'sourceSiteHandle',
+  id: 'sourceSiteHandle',
   options: allSites|unshift({
     value: '',
     label: ' ',
@@ -35,6 +41,7 @@
   label: 'Target Sites'|t(plugin.handle),
   name: 'targetSiteHandles',
   options: allSites|map(o => o|merge({
+    label: [o.label, o.data.data.hint]|filter|join(' - '),
     disabled: 'targetSiteHandles' in overrides,
   })),
   values: settings.targetSiteHandles,
