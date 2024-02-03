@@ -15,6 +15,20 @@
   })
 %}
 
+{% set languageId = craft.app.locale.getLanguageID() %}
+{% set allLanguages = craft.app.i18n.getAppLocales()
+  |map(locale => {
+    label: locale.getDisplayName(craft.app.language),
+    value: locale.id,
+    data: {
+      data: {
+        hint: locale.getLanguageID() != languageId ? locale.getDisplayName(),
+        hintLang: locale.id,
+      },
+    },
+  })
+%}
+
 {% macro configWarning(setting, plugin) -%}
     {{ "This is being overridden by the `{setting}` config setting in your `{file}` config file."|t(plugin.handle, {
         setting: setting,
@@ -47,6 +61,25 @@
   values: settings.targetSiteHandles,
   warning: 'targetSiteHandles' in overrides ? _self.configWarning('targetSiteHandles', plugin),
   errors: settings.getErrors('targetSiteHandles'),
+}) }}
+
+{{ forms.selectizeField({
+  label: 'Default Template Language'|t(plugin.handle),
+  name: 'defaultTemplateLanguage',
+  id: 'defaultTemplateLanguage',
+  options: allLanguages
+    |unshift({
+      value: '__source__',
+      label: 'Same as Source Site',
+    })
+    |unshift({
+      value: '__auto__',
+      label: 'Auto-detect',
+    }),
+  value: settings.defaultTemplateLanguage,
+  disabled: 'defaultTemplateLanguage' in overrides,
+  warning: 'defaultTemplateLanguage' in overrides ? _self.configWarning('defaultTemplateLanguage', plugin),
+  errors: settings.getErrors('defaultTemplateLanguage'),
 }) }}
 
 <hr>
