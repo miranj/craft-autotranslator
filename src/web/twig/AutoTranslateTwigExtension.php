@@ -21,8 +21,8 @@ class AutoTranslateTwigExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            new TwigFilter('autotranslate', [$this, 'autotranslate']),
-            new TwigFilter('at', [$this, 'autotranslate']),
+            new TwigFilter('autotranslate', [$this, 'autotranslate'], ['is_safe' => ['html']]),
+            new TwigFilter('at', [$this, 'autotranslate'], ['is_safe' => ['html']]),
         ];
     }
 
