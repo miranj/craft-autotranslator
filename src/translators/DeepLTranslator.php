@@ -4,8 +4,8 @@ namespace miranj\autotranslator\translators;
 
 use Craft;
 use craft\helpers\App;
-use DeepL\Translator as Translator;
 use DeepL\DeepLException;
+use DeepL\Translator as Translator;
 use miranj\autotranslator\exceptions\AutoTranslatorException;
 use miranj\autotranslator\helpers\LanguageHelper;
 use miranj\autotranslator\Plugin;
@@ -27,7 +27,8 @@ class DeepLTranslator implements TranslatorInterface
     protected $_sourceLanguages = [];
     protected $_targetLanguages = [];
     
-    function __construct(array $config = []) {
+    public function __construct(array $config = [])
+    {
         $config = array_merge(self::$defaultConfig, $config);
         $this->_apiKey = App::parseEnv($config['translatorAuthKey']);
     }

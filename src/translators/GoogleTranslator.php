@@ -28,7 +28,8 @@ class GoogleTranslator implements TranslatorInterface
     protected $_sourceLanguages = [];
     protected $_targetLanguages = [];
     
-    function __construct(array $config = []) {
+    public function __construct(array $config = [])
+    {
         $config = array_merge(self::$defaultConfig, $config);
         $this->_apiKey = App::parseEnv($config['translatorAuthKey']);
     }

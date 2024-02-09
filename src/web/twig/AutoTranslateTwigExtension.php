@@ -7,7 +7,6 @@ use miranj\autotranslator\Plugin;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
-
 /**
  * Twig extension
  */

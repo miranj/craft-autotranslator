@@ -20,7 +20,7 @@ class Settings extends Model
     /**
      * Used by the Twig filter when no source language
      * is explicitly specified using the `from` param
-     * 
+     *
      * @values  __auto__ | __source__ | <locale-id>
      */
     public string $defaultTemplateLanguage = '__auto__';

@@ -20,6 +20,7 @@ use miranj\autotranslator\web\twig\AutoTranslateTwigExtension;
  * @author Miranj Design LLP <hello@miranj.in>
  * @copyright Miranj Design LLP
  * @license MIT
+ * @property-read Settings $settings
  * @property-read Translator $translator
  */
 class Plugin extends BasePlugin
