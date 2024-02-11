@@ -14,6 +14,12 @@ class Translator extends Component
 {
     protected $_translator = null;
     
+    public function isActive(): bool
+    {
+        return $this->_translator
+            || Plugin::getInstance()->getSettings()->isTranslatorCompatible();
+    }
+    
     public function getTranslator()
     {
         if (!$this->_translator) {
