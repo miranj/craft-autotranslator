@@ -6,6 +6,7 @@ use Craft;
 use craft\base\Model;
 use craft\base\Plugin as BasePlugin;
 use miranj\autotranslator\models\Settings;
+use miranj\autotranslator\services\SiteSync;
 use miranj\autotranslator\services\Translator;
 use miranj\autotranslator\translators\DeepLTranslator;
 use miranj\autotranslator\translators\GoogleTranslator;
@@ -22,6 +23,7 @@ use miranj\autotranslator\web\twig\AutoTranslateTwigExtension;
  * @license MIT
  * @property-read Settings $settings
  * @property-read Translator $translator
+ * @property-read SiteSync $siteSync
  */
 class Plugin extends BasePlugin
 {
@@ -36,7 +38,7 @@ class Plugin extends BasePlugin
     public static function config(): array
     {
         return [
-            'components' => ['translator' => Translator::class],
+            'components' => ['translator' => Translator::class, 'siteSync' => SiteSync::class],
         ];
     }
 
@@ -47,6 +49,7 @@ class Plugin extends BasePlugin
         // Defer most setup tasks until Craft is fully initialized
         Craft::$app->onInit(function() {
             $this->attachEventHandlers();
+            $this->siteSync->attachEventHandlers();
             // ...
         });
         Craft::$app->view->registerTwigExtension(new AutoTranslateTwigExtension());
