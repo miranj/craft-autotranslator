@@ -138,16 +138,19 @@ class SiteSync extends Component
         # code...
     }
     
-    public function translateFields($sourceElement, $element)
+    public function translateFields($sourceElement, $element, $sourceElementOwner = null, $elementOwner = null)
     {
         // defaults
+        $sourceElementOwner = $sourceElementOwner ?: $sourceElement;
+        $elementOwner = $elementOwner ?: $element;
+        
         $translatedFields = [];
         
         // remove relation fields
         // remove fields already synced by Craft
         $fields = Collection::make($element->getFieldLayout()->getCustomFields())
             ->reject(fn($field) => $field instanceof BaseRelationField)
-            ->filter(fn($field) => $field->getTranslationKey($sourceElement) !== $field->getTranslationKey($element));
+            ->filter(fn($field) => $field->getTranslationKey($sourceElementOwner) !== $field->getTranslationKey($elementOwner));
         
         // locate translators for each field
         $fieldsWithTranslators = $fields
@@ -164,8 +167,8 @@ class SiteSync extends Component
             $newValue = $translator::translate(
                 $field,
                 $sourceElement,
-                $element->site->language,
-                $sourceElement->site->language,
+                $elementOwner->site->language,
+                $sourceElementOwner->site->language,
             );
             
             // queue for saving
