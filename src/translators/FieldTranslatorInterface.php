@@ -2,7 +2,6 @@
 
 namespace miranj\autotranslator\translators;
 
-use craft\base\ElementInterface;
 use craft\base\Field;
 use miranj\autotranslator\exceptions\AutoTranslatorException;
 
@@ -18,5 +17,5 @@ interface FieldTranslatorInterface
     public static function canTranslate(Field $field): bool;
     
     // Returns the translated value of a supported field
-    public static function translate(Field $field, ElementInterface $element, string $targetLanguage, string $sourceLanguage = '');
+    public static function translate(Field $field, $sourceElement, $targetElementOwner, $sourceElementOwner);
 }

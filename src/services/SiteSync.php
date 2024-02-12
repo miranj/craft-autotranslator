@@ -167,8 +167,8 @@ class SiteSync extends Component
             $newValue = $translator::translate(
                 $field,
                 $sourceElement,
-                $elementOwner->site->language,
-                $sourceElementOwner->site->language,
+                $elementOwner,
+                $sourceElementOwner,
             );
             
             // queue for saving

@@ -3,7 +3,6 @@
 namespace miranj\autotranslator\translators;
 
 use Craft;
-use craft\base\ElementInterface;
 use craft\base\Field;
 use craft\fields\PlainText;
 use craft\fields\BaseRelationField;
@@ -42,9 +41,9 @@ class TextFieldTranslator implements FieldTranslatorInterface
     }
     
     // Returns the translated value of a supported field
-    public static function translate(Field $field, ElementInterface $element, string $targetLanguage, string $sourceLanguage = '')
+    public static function translate(Field $field, $sourceElement, $targetElementOwner, $sourceElementOwner)
     {
-        $value = $element->getFieldValue($field->handle);
+        $value = $sourceElement->getFieldValue($field->handle);
         
         if (!static::canTranslate($field)) {
             return $value;
@@ -52,8 +51,8 @@ class TextFieldTranslator implements FieldTranslatorInterface
         
         return Plugin::getInstance()->translator->translate(
             $value,
-            $targetLanguage,
-            $sourceLanguage,
+            $targetElementOwner->site->language,
+            $sourceElementOwner->site->language,
         );
     }
 }

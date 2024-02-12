@@ -3,7 +3,6 @@
 namespace miranj\autotranslator\translators;
 
 use Craft;
-use craft\base\ElementInterface;
 use craft\base\Field;
 use craft\fields\Table;
 use Illuminate\Support\Collection;
@@ -29,10 +28,10 @@ class TableFieldTranslator extends TextFieldTranslator
     }
     
     // Returns the translated value of a supported field
-    public static function translate(Field $field, ElementInterface $element, string $targetLanguage, string $sourceLanguage = '')
+    public static function translate(Field $field, $sourceElement, $targetElementOwner, $sourceElementOwner)
     {
         // sanity check
-        $value = $element->getFieldValue($field->handle);
+        $value = $sourceElement->getFieldValue($field->handle);
         if (!static::canTranslate($field)) {
             return $value;
         }
@@ -45,14 +44,14 @@ class TableFieldTranslator extends TextFieldTranslator
         
         // copy and translate all data
         $translatedData = [];
-        foreach ($field->serializeValue($value, $element) as $row) {
+        foreach ($field->serializeValue($value, $sourceElement) as $row) {
             $newRow = [];
             foreach ($row as $column => $data) {
                 $newRow[$column] = in_array($column, $translatableColumns)
                     ? Plugin::getInstance()->translator->translate(
                         $data,
-                        $targetLanguage,
-                        $sourceLanguage,
+                        $targetElementOwner->site->language,
+                        $sourceElementOwner->site->language,
                     )
                     : $data;
             }
