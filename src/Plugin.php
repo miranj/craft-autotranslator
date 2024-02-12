@@ -36,6 +36,7 @@ class Plugin extends BasePlugin
     public const DEFAULT_FIELD_TRANSLATORS = [
         translators\TextFieldTranslator::class,
         translators\TableFieldTranslator::class,
+        translators\VizyFieldTranslator::class,
     ];
 
     public static function config(): array
