@@ -11,6 +11,7 @@ use craft\events\ModelEvent;
 use craft\fields\BaseRelationField;
 use craft\helpers\ElementHelper;
 use craft\services\Elements;
+use Illuminate\Support\Collection;
 use miranj\autotranslator\Plugin;
 use yii\base\Component;
 use yii\base\Event;
@@ -23,11 +24,13 @@ class SiteSync extends Component
 {
     protected $settings;
     protected array $queuedSourceElements = [];
+    protected Collection $fieldTranslators;
     
     public function init(): void
     {
         parent::init();
         $this->settings = Plugin::getInstance()->settings;
+        $this->fieldTranslators = Collection::make(Plugin::DEFAULT_FIELD_TRANSLATORS)->reverse();
     }
     
     public function isActive(): bool
@@ -137,15 +140,37 @@ class SiteSync extends Component
     
     public function translateFields($sourceElement, $element)
     {
-    }
-    
-    public function translateField($field, $fieldValue, $sourceLanguage, $targetLanguage)
-    {
-        return Plugin::getInstance()->translator->translate(
-            $fieldValue,
-            $targetLanguage,
-            $sourceLanguage,
-        );
+        // remove relation fields
+        // remove fields already synced by Craft
+        $fields = Collection::make($element->getFieldLayout()->getCustomFields())
+            ->reject(fn($field) => $field instanceof BaseRelationField)
+            ->filter(fn($field) => $field->getTranslationKey($sourceElement) !== $field->getTranslationKey($element));
+        
+        // locate translators for each field
+        $fieldsWithTranslators = $fields
+            ->map(fn($field) => [
+                $field,
+                $this->fieldTranslators->first(
+                    fn($fieldTranslator) => $fieldTranslator::canTranslate($field)
+                ),
+            ])
+            ->where('1', '!=', []);
+        
+        foreach ($fieldsWithTranslators->all() as list($field, $translator)) {
+            // translate value
+            $newValue = $translator::translate(
+                $field,
+                $sourceElement->getFieldValue($field->handle),
+                $element->site->language,
+                $sourceElement->site->language,
+            );
+            
+            // queue for saving
+            $element->setFieldValue(
+                $field->handle,
+                $newValue,
+            );
+        }
     }
     
     protected function isQueued($element): bool
