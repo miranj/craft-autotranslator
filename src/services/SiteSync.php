@@ -130,7 +130,7 @@ class SiteSync extends Component
         $sourceElement = $this->getQueued($element);
         Craft::info("Syncing ". get_class($element) .": $element from {$sourceElement->site->language} to {$element->site->language}", __METHOD__);
         $this->translateAttributes($sourceElement, $element);
-        $this->translateFields($sourceElement, $element);
+        $element->setFieldValues($this->translateFields($sourceElement, $element));
     }
     
     public function translateAttributes($sourceElement, $element)
@@ -140,6 +140,9 @@ class SiteSync extends Component
     
     public function translateFields($sourceElement, $element)
     {
+        // defaults
+        $translatedFields = [];
+        
         // remove relation fields
         // remove fields already synced by Craft
         $fields = Collection::make($element->getFieldLayout()->getCustomFields())
@@ -166,11 +169,10 @@ class SiteSync extends Component
             );
             
             // queue for saving
-            $element->setFieldValue(
-                $field->handle,
-                $newValue,
-            );
+            $translatedFields[$field->handle] = $newValue;
         }
+        
+        return $translatedFields;
     }
     
     protected function isQueued($element): bool
