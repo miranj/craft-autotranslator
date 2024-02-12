@@ -155,12 +155,12 @@ class SiteSync extends Component
                 ),
             ])
             ->where('1', '!=', []);
-        
+
         foreach ($fieldsWithTranslators->all() as list($field, $translator)) {
             // translate value
             $newValue = $translator::translate(
                 $field,
-                $sourceElement->getFieldValue($field->handle),
+                $sourceElement,
                 $element->site->language,
                 $sourceElement->site->language,
             );
