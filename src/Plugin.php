@@ -6,13 +6,9 @@ use Craft;
 use craft\base\Model;
 use craft\base\Plugin as BasePlugin;
 use miranj\autotranslator\models\Settings;
-use miranj\autotranslator\services\SiteSync;
-use miranj\autotranslator\services\Translator;
-use miranj\autotranslator\translators\DeepLTranslator;
-use miranj\autotranslator\translators\GoogleTranslator;
+use miranj\autotranslator\services;
+use miranj\autotranslator\translators;
 use miranj\autotranslator\translators\TranslatorInterface;
-use miranj\autotranslator\translators\TextFieldTranslator;
-use miranj\autotranslator\translators\TableFieldTranslator;
 use miranj\autotranslator\web\twig\AutoTranslateTwigExtension;
 
 /**
@@ -33,19 +29,22 @@ class Plugin extends BasePlugin
     public bool $hasCpSettings = true;
     
     public const DEFAULT_TRANSLATORS = [
-        DeepLTranslator::class,
-        GoogleTranslator::class,
+        translators\DeepLTranslator::class,
+        translators\GoogleTranslator::class,
     ];
     
     public const DEFAULT_FIELD_TRANSLATORS = [
-        TextFieldTranslator::class,
-        TableFieldTranslator::class,
+        translators\TextFieldTranslator::class,
+        translators\TableFieldTranslator::class,
     ];
 
     public static function config(): array
     {
         return [
-            'components' => ['translator' => Translator::class, 'siteSync' => SiteSync::class],
+            'components' => [
+                'translator' => services\Translator::class,
+                'siteSync' => services\SiteSync::class,
+            ],
         ];
     }
 
