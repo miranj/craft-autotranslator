@@ -12,6 +12,7 @@ use miranj\autotranslator\translators\DeepLTranslator;
 use miranj\autotranslator\translators\GoogleTranslator;
 use miranj\autotranslator\translators\TranslatorInterface;
 use miranj\autotranslator\translators\TextFieldTranslator;
+use miranj\autotranslator\translators\TableFieldTranslator;
 use miranj\autotranslator\web\twig\AutoTranslateTwigExtension;
 
 /**
@@ -38,6 +39,7 @@ class Plugin extends BasePlugin
     
     public const DEFAULT_FIELD_TRANSLATORS = [
         TextFieldTranslator::class,
+        TableFieldTranslator::class,
     ];
 
     public static function config(): array
