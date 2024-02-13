@@ -8,8 +8,8 @@ use craft\base\Plugin as BasePlugin;
 use miranj\autotranslator\fieldtranslators;
 use miranj\autotranslator\models\Settings;
 use miranj\autotranslator\services;
-use miranj\autotranslator\translators;
-use miranj\autotranslator\translators\TranslatorInterface;
+use miranj\autotranslator\translationproviders;
+use miranj\autotranslator\translationproviders\TranslatorInterface;
 use miranj\autotranslator\web\twig\AutoTranslateTwigExtension;
 
 /**
@@ -30,8 +30,8 @@ class Plugin extends BasePlugin
     public bool $hasCpSettings = true;
     
     public const DEFAULT_TRANSLATORS = [
-        translators\DeepLTranslator::class,
-        translators\GoogleTranslator::class,
+        translationproviders\DeepLTranslator::class,
+        translationproviders\GoogleTranslator::class,
     ];
     
     public const DEFAULT_FIELD_TRANSLATORS = [

@@ -1,6 +1,6 @@
 <?php
 
-namespace miranj\autotranslator\translators;
+namespace miranj\autotranslator\translationproviders;
 
 use miranj\autotranslator\exceptions\AutoTranslatorException;
 

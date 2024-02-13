@@ -1,6 +1,6 @@
 <?php
 
-namespace miranj\autotranslator\translators;
+namespace miranj\autotranslator\translationproviders;
 
 use Craft;
 use craft\helpers\App;

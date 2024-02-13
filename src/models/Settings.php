@@ -3,7 +3,7 @@
 namespace miranj\autotranslator\models;
 
 use craft\base\Model;
-use miranj\autotranslator\translators\TranslatorInterface;
+use miranj\autotranslator\translationproviders\TranslatorInterface;
 
 /**
  * Auto Translator settings
