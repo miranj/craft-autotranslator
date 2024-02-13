@@ -90,7 +90,11 @@ class SiteSync extends Component
         }
         
         // ignore drafts, revisions, provisional drafts, etc
-        if (!ElementHelper::isCanonical($element)) {
+        if (
+            !ElementHelper::isCanonical($element) ||
+            ElementHelper::isDraftOrRevision($element) ||
+            $element->isRevision
+        ) {
             Craft::debug("Ignore non-canonical element: $element", __METHOD__);
             return;
         }
@@ -114,9 +118,8 @@ class SiteSync extends Component
     {
         $element = $event->element;
         
-        // ignore non-propagating elements
         // only act on queued source elements
-        if (!$element->propagating || !$this->isQueued($element)) {
+        if (!$this->isQueued($element)) {
             return;
         }
         
