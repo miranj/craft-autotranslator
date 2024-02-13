@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 use miranj\autotranslator\Plugin;
 
 /**
-* Base Field Translator
+* Table Field Translator
 */
 class TableFieldTranslator extends TextFieldTranslator
 {

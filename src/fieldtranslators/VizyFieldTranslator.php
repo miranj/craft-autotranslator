@@ -11,7 +11,7 @@ use verbb\vizy\models\NodeCollection;
 use verbb\vizy\nodes as VizyNodes;
 
 /**
-* Base Field Translator
+* Vizy Field Translator
 */
 class VizyFieldTranslator extends TextFieldTranslator
 {

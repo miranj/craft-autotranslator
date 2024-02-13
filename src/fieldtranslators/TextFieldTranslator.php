@@ -10,7 +10,7 @@ use craft\helpers\ArrayHelper;
 use miranj\autotranslator\Plugin;
 
 /**
-* Base Field Translator
+* Text Field Translator
 */
 class TextFieldTranslator implements FieldTranslatorInterface
 {
