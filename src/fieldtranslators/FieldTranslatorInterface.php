@@ -3,7 +3,6 @@
 namespace miranj\autotranslator\fieldtranslators;
 
 use craft\base\Field;
-use miranj\autotranslator\exceptions\AutoTranslatorException;
 
 interface FieldTranslatorInterface
 {    
