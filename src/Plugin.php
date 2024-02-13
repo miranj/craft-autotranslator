@@ -5,6 +5,7 @@ namespace miranj\autotranslator;
 use Craft;
 use craft\base\Model;
 use craft\base\Plugin as BasePlugin;
+use miranj\autotranslator\fieldtranslators;
 use miranj\autotranslator\models\Settings;
 use miranj\autotranslator\services;
 use miranj\autotranslator\translators;
@@ -34,9 +35,9 @@ class Plugin extends BasePlugin
     ];
     
     public const DEFAULT_FIELD_TRANSLATORS = [
-        translators\TextFieldTranslator::class,
-        translators\TableFieldTranslator::class,
-        translators\VizyFieldTranslator::class,
+        fieldtranslators\TextFieldTranslator::class,
+        fieldtranslators\TableFieldTranslator::class,
+        fieldtranslators\VizyFieldTranslator::class,
     ];
 
     public static function config(): array

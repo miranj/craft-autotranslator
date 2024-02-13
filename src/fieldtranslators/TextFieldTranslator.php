@@ -1,6 +1,6 @@
 <?php
 
-namespace miranj\autotranslator\translators;
+namespace miranj\autotranslator\fieldtranslators;
 
 use Craft;
 use craft\base\Field;
