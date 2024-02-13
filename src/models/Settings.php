@@ -44,9 +44,11 @@ class Settings extends Model
     
     public function isTranslatorCompatible()
     {
-        return $this->translatorClass !== null && in_array(
-            TranslatorInterface::class,
-            class_implements($this->translatorClass),
-        );
+        return $this->translatorClass !== null &&
+            class_exists($this->translatorClass) &&
+            in_array(
+                TranslatorInterface::class,
+                class_implements($this->translatorClass),
+            );
     }
 }

@@ -14,6 +14,14 @@ class Translator extends Component
 {
     protected $_translator = null;
     
+    public function init()
+    {
+        parent::init();
+        if (!$this->isActive()) {
+            Craft::warning("Translation provider not configured", __METHOD__);
+        }
+    }
+    
     public function isActive(): bool
     {
         return $this->_translator

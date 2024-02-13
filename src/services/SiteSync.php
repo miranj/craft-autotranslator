@@ -46,7 +46,7 @@ class SiteSync extends Component
     {
         // sanity check
         if (!$this->isActive()) {
-            Craft::debug("Auto-translation sync not configured", __METHOD__);
+            Craft::warning("Auto-translation sync not configured", __METHOD__);
             return;
         }
         
