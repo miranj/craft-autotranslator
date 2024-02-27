@@ -138,7 +138,18 @@ class SiteSync extends Component
     
     public function translateAttributes($sourceElement, $element)
     {
-        # code...
+        // translate the title
+        if (
+            $element::hasTitles() &&
+            $sourceElement->getTitleTranslationKey() !== $element->getTitleTranslationKey()
+        ) {
+            Craft::debug("Translating native title field", __METHOD__);
+            $element->title = Plugin::getInstance()->translator->translate(
+                $sourceElement->title,
+                $element->site->language,
+                $sourceElement->site->language,
+            );
+        }
     }
     
     public function translateFields($sourceElement, $element, $sourceElementOwner = null, $elementOwner = null)
