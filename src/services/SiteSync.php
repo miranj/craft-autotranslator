@@ -150,6 +150,39 @@ class SiteSync extends Component
                 $sourceElement->site->language,
             );
         }
+        
+        // translate the slug
+        if (
+            $sourceElement->getSlugTranslationKey() !== $element->getSlugTranslationKey()
+        ) {
+            Craft::debug("Translating native slug field", __METHOD__);
+            
+            // de-slugify, translate, re-slugify
+            $sourceValue = str_replace(
+                Craft::$app->getConfig()->getGeneral()->slugWordSeparator,
+                ' ',
+                $sourceElement->slug,
+            );
+            $newValue = Plugin::getInstance()->translator->translate(
+                $sourceValue,
+                $element->site->language,
+                $sourceElement->site->language,
+            );
+            $newValue = ElementHelper::generateSlug(
+                $newValue,
+                Craft::$app->getConfig()->getGeneral()->limitAutoSlugsToAscii,
+                $element->site->language,
+            );
+            
+            // update if needed, force URI refresh
+            if ($element->slug !== $newValue) {
+                $element->slug = $newValue;
+                if ($element::hasUris()) {
+                    Craft::debug("Updating element uri", __METHOD__);
+                    Craft::$app->elements->setElementUri($element);
+                }
+            }
+        }
     }
     
     public function translateFields($sourceElement, $element, $sourceElementOwner = null, $elementOwner = null)
