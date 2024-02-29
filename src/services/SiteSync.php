@@ -61,7 +61,7 @@ class SiteSync extends Component
         Event::on(
             Elements::class,
             Elements::EVENT_BEFORE_SAVE_ELEMENT,
-            [$this, 'syncElementTranslations'],
+            [$this, 'syncElementIfQueued'],
         );
         
         // Un-track synced elements after propagation
@@ -114,7 +114,7 @@ class SiteSync extends Component
         $this->unqueueElement($event->sender);
     }
     
-    public function syncElementTranslations(ElementEvent $event)
+    public function syncElementIfQueued(ElementEvent $event)
     {
         $element = $event->element;
         
@@ -131,9 +131,16 @@ class SiteSync extends Component
         
         // proceed
         $sourceElement = $this->getQueued($element);
-        Craft::info("Syncing ". get_class($element) .": $element from {$sourceElement->site->language} to {$element->site->language}", __METHOD__);
-        $this->translateAttributes($sourceElement, $element);
-        $element->setFieldValues($this->translateFields($sourceElement, $element));
+        $this->syncElementTranslations($sourceElement, $element);
+    }
+    
+    public function syncElementTranslations($sourceElement, $targetElement)
+    {
+        Craft::info("Syncing ". get_class($targetElement) .": $targetElement from {$sourceElement->site->language} to {$targetElement->site->language}", __METHOD__);
+        
+        $this->translateAttributes($sourceElement, $targetElement);
+        $translatedValues = $this->translateFields($sourceElement, $targetElement);
+        $targetElement->setFieldValues($translatedValues);
     }
     
     public function translateAttributes($sourceElement, $element)
