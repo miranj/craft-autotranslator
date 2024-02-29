@@ -9,13 +9,13 @@ use craft\elements\Entry;
 use craft\events\ElementEvent;
 use craft\events\ModelEvent;
 use craft\fields\BaseRelationField;
+use craft\helpers\ArrayHelper;
 use craft\helpers\ElementHelper;
 use craft\services\Elements;
 use Illuminate\Support\Collection;
 use miranj\autotranslator\Plugin;
 use yii\base\Component;
 use yii\base\Event;
-use yii\helpers\ArrayHelper;
 
 /**
  * Site Sync service
@@ -25,6 +25,13 @@ class SiteSync extends Component
     protected $settings;
     protected array $queuedSourceElements = [];
     protected Collection $fieldTranslators;
+    
+    public const DEFAULT_ELEMENTS = [
+        \craft\elements\Entry::class,
+        \craft\elements\MatrixBlock::class,
+        \craft\elements\Category::class,
+        \craft\elements\Asset::class,
+    ];
     
     public function init(): void
     {
@@ -75,6 +82,14 @@ class SiteSync extends Component
     public function queueSyncDuringPropagate(ElementEvent $event)
     {
         $element = $event->element;
+        
+        // ignore unsupported elements
+        if (!ArrayHelper::firstWhere(
+            static::DEFAULT_ELEMENTS,
+            fn($elementClass) => $element instanceof $elementClass
+        )) {
+            return;
+        }
         
         // ignore non-localized elements
         // ignore propagating elements
