@@ -98,6 +98,10 @@ class DeepLTranslator implements TranslatorInterface
             $targetLanguage = $this->findMatchingTargetLanguage($targetLanguage);
             $sourceLanguage = $this->findMatchingSourceLanguage($sourceLanguage);
             
+            if (!$targetLanguage) {
+                throw new AutoTranslatorException('Target language not supported by '.static::displayName());
+            }
+            
             $result = $this->getApiClient()->translateText(
                 $input,
                 $sourceLanguage ?: null,

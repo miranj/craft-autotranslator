@@ -99,6 +99,10 @@ class GoogleTranslator implements TranslatorInterface
             $targetLanguage = $this->findMatchingTargetLanguage($targetLanguage);
             $sourceLanguage = $this->findMatchingSourceLanguage($sourceLanguage);
             
+            if (!$targetLanguage) {
+                throw new AutoTranslatorException('Target language not supported by '.static::displayName());
+            }
+            
             $result = $this->getApiClient()->translate($input, [
                 'target' => $targetLanguage,
                 'source' => $sourceLanguage ?: null,
