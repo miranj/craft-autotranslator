@@ -31,6 +31,7 @@ class SiteSync extends Component
         \craft\elements\MatrixBlock::class,
         \craft\elements\Category::class,
         \craft\elements\Asset::class,
+        \verbb\navigation\elements\Node::class,
     ];
     
     public function init(): void
