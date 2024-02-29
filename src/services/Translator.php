@@ -3,6 +3,7 @@
 namespace miranj\autotranslator\services;
 
 use Craft;
+use craft\helpers\StringHelper;
 use miranj\autotranslator\exceptions\AutoTranslatorException;
 use miranj\autotranslator\Plugin;
 use yii\base\Component;
@@ -93,6 +94,9 @@ class Translator extends Component
         } else {
             Craft::debug("Translate to $targetLanguage: $input", __METHOD__);
         }
+        
+        // cleanup
+        $input = StringHelper::htmlDecode($input);
 
         // attempt automatic translation
         try {
