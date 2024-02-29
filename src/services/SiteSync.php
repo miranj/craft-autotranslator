@@ -153,6 +153,7 @@ class SiteSync extends Component
         
         // translate the slug
         if (
+            $sourceElement->slug &&
             $sourceElement->getSlugTranslationKey() !== $element->getSlugTranslationKey()
         ) {
             Craft::debug("Translating native slug field", __METHOD__);
