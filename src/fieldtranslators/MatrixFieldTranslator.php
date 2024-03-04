@@ -3,6 +3,7 @@
 namespace miranj\autotranslator\fieldtranslators;
 
 use Craft;
+use craft\base\ElementInterface;
 use craft\base\Field;
 use craft\elements\MatrixBlock;
 use craft\fields\Matrix;
@@ -34,17 +35,23 @@ class MatrixFieldTranslator extends TextFieldTranslator
             return $value;
         }
         
+        $isSourceValidElement = $sourceElement instanceof ElementInterface;
+        
         // set parent field to be dirty
         // (this will force all Matrix blocks in this field to be re-saved
         // in the afterElementPropagate() method and the existing element sync
         // workflow will ensure translateable fields get synced automatically,
         // no extra steps needed because each Matrix block is an element)
-        if (static::$forceMatrixFieldSync && !$sourceElement->isFieldDirty($field->handle)) {
+        if (
+            static::$forceMatrixFieldSync &&
+            $isSourceValidElement &&
+            !$sourceElement->isFieldDirty($field->handle)
+        ) {
             Craft::debug("Marking Matrix field as dirty: $field->handle", __METHOD__);
             $sourceElement->setDirtyFields([$field->handle]);
         }
         
-        if ($sourceElement->isFieldDirty($field->handle)) {
+        if ($isSourceValidElement && $sourceElement->isFieldDirty($field->handle)) {
             Craft::debug("Deferring dirty Matrix field translation as an element: $field->handle", __METHOD__);
             return [];
         }
@@ -57,7 +64,7 @@ class MatrixFieldTranslator extends TextFieldTranslator
             $value instanceof Collection
                 ? $value->all()
                 : ($value->getCachedResult() ?? (clone $value)->status(null)->all()),
-            $field->serializeValue($value, $sourceElement),
+            $field->serializeValue($value, $isSourceValidElement ? $sourceElement : null),
             $sourceElement,
             $targetElementOwner,
             $sourceElementOwner,
@@ -77,21 +84,22 @@ class MatrixFieldTranslator extends TextFieldTranslator
         // existing blocks
         $translatedBlocks = $serializedBlocks;
         
-        foreach ($blocks as $block) {
-
+        foreach ($serializedBlocks as $serializedBlockId => $serializedBlock) {
+            $block = array_shift($blocks);
+            
             // treat MatrixBlocks as elements & attempt translating all fields
-            if ($block instanceof MatrixBlock) {
+            if ($block && $block instanceof MatrixBlock) {
                 $newFieldValues = Plugin::getInstance()->siteSync->translateFields(
                     $block,
                     clone $block,
                     $sourceElementOwner,
                     $targetElementOwner,
                 );
-                $translatedBlocks[$block->id]['fields'] = ArrayHelper::merge(
-                    $translatedBlocks[$block->id]['fields'],
+                $translatedBlocks[$serializedBlockId]['fields'] = ArrayHelper::merge(
+                    $serializedBlock['fields'],
                     $newFieldValues,
                 );
-                $translatedBlocks[$block->id]['dirty'] = true;
+                $translatedBlocks[$serializedBlockId]['dirty'] = true;
             }
         }
                 
