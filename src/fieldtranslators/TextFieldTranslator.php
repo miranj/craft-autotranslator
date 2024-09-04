@@ -7,6 +7,7 @@ use craft\base\Field;
 use craft\fields\PlainText;
 use craft\fields\BaseRelationField;
 use craft\helpers\ArrayHelper;
+use craft\redactor\Field as Redactor;
 use miranj\autotranslator\Plugin;
 
 /**
@@ -16,6 +17,7 @@ class TextFieldTranslator implements FieldTranslatorInterface
 {
     public const FIELD_TYPES = [
         PlainText::class,
+        Redactor::class,
     ];
     
     public static function displayName(): string
